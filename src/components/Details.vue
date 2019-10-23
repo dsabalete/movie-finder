@@ -1,22 +1,19 @@
 <template>
-  <div class="row">
-    <div class="col-xs-6">
-      <img :src="details.Poster">
-    </div>
-    <div class="col-xs-6 right">
+  <div class="text-center">
+    <a :href="imdbLink" target="_blank"><img :src="details.Poster" ></a>
+    <div class="movie-details">
       <p>Title: {{ details.Title }}</p>
-      <p>Director: {{ details.Director }}</p>
-      <p>Writer: {{ details.Writer }}</p>
+      <p>Director: {{ details.Director }} - Writer: {{ details.Writer }}</p>
       <p>Actors: {{ details.Actors }}</p>
+      <p>Released: {{ details.Released }}</p>
       <p>Genre: {{ details.Genre }}</p>
-      <p>Year: {{ details.Year }}</p>
       <p v-if="details.Plot != 'N/A'">Plot: {{ details.Plot }}</p>
       <p>Type: {{ details.Type }}</p>
       <p>Runtime: {{ details.Runtime }}</p>
-      <p>Released: {{ details.Released }}</p>
-      <p><a :href="imdbLink" target="_blank">more info</a></p>
-      <router-link to="/">Return to homepage</router-link>
-    </div>    
+    </div>
+    <div class="go-home">
+      <button class="btn btn-primary" @click="navigateToHome">New search</button>
+    </div>
   </div>
 </template>
 
@@ -35,14 +32,33 @@ export default {
       return 'https://www.imdb.com/title/' + this.id
     }
   },
+  methods: {
+    navigateToHome () {
+      this.$router.push('/')
+    }
+  },
   created () {
     const url = `${this.apiRoot}?apikey=${this.apiKey}&i=${this.id}`
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        console.log(data)
         this.details = data
       })
   }
 }
 </script>
+
+<style scoped>
+img {
+  margin-bottom: 10px;
+}
+.movie-details {
+  background-color: white;
+  padding: 10px;
+  text-align: left;
+}
+.go-home {
+  margin: 10px;
+  text-align: center;
+}
+</style>

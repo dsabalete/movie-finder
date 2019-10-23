@@ -1,8 +1,6 @@
 <template>
-    <div class="text-center">
-      <router-link :to="imdbLink">
-        <img :src="film.Poster" :alt="film.Title">
-      </router-link>
+    <div class="text-center" @click="navigateToDetails">
+      <img :src="film.Poster" :alt="film.Title">
       <h4>{{ film.Title }} ({{ film.Year }})</h4>
       <p>Director: {{ director }}</p>
     </div>
@@ -24,8 +22,8 @@ export default {
     }
   },
   methods: {
-    goToImdb () {
-      window.open(this.imdbLink, '_blank')
+    navigateToDetails () {
+      this.$router.push(this.imdbLink)
     }
   },
   created () {
