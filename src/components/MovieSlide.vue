@@ -1,6 +1,8 @@
 <template>
     <div class="text-center">
-      <img :src="film.Poster" :alt="film.Title" @click="goToImdb">
+      <router-link :to="imdbLink">
+        <img :src="film.Poster" :alt="film.Title">
+      </router-link>
       <h4>{{ film.Title }} ({{ film.Year }})</h4>
       <p>Director: {{ director }}</p>
     </div>
@@ -18,7 +20,7 @@ export default {
   },
   computed: {
     imdbLink: function () {
-      return 'https://www.imdb.com/title/' + this.film.imdbID
+      return '/Details/' + this.film.imdbID
     }
   },
   methods: {

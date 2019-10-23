@@ -5,26 +5,30 @@
         <input type="text" class="form-control" placeholder="Search movies by title"
           id="search"
           v-model="searchString"
-          @change="error = ''">
+          @focus="onFocus">
         <span class="input-group-btn">
           <button class="btn btn-primary" @click="doSearch">Search</button>
         </span>
       </div>
     </form>
     <br>
-    <carousel v-if="data"
-      :navigationEnabled="true"
-      :perPage="1">
-      <slide v-for="(film, index) in data" :key="index" class="carousel-item">
-        <app-movie :film="film"/>
-      </slide>
-    </carousel>
-    <div class="alert alert-info" v-if="error">{{ error }}</div>
+    <transition :name="alertAnimation" mode="out-in">
+      <carousel v-if="data"
+        :navigationEnabled="true"
+        :perPage="1">
+        <slide v-for="(film, index) in data" :key="index" class="carousel-item">
+          <app-movie-slide :film="film"/>
+        </slide>
+      </carousel>
+    </transition>
+    <transition :name="alertAnimation" mode="out-in">
+      <div class="alert alert-info" v-if="error" key="info">{{ error }}</div>
+    </transition>
   </div>
 </template>
 
 <script>
-import Movie from './Movie.vue'
+import MovieSlide from './MovieSlide.vue'
 import { Carousel, Slide } from 'vue-carousel'
 
 export default {
@@ -35,10 +39,15 @@ export default {
       apiRoot: process.env.VUE_APP_API_ROOT,
       resource: {},
       data: null,
-      error: ''
+      error: '',
+      alertAnimation: 'fade'
     }
   },
   methods: {
+    onFocus () {
+      this.searchString = ''
+      this.error = ''
+    },
     doSearch () {
       this.data = null
       fetch(`${this.apiRoot}?apikey=${this.apiKey}&s=${this.searchString}`)
@@ -53,9 +62,25 @@ export default {
     }
   },
   components: {
-    appMovie: Movie,
+    appMovieSlide: MovieSlide,
     Carousel,
     Slide
   }
 }
 </script>
+
+<style scoped>
+  .fade-enter {
+    opacity: 0;
+  }
+  .fade-enter-active {
+    transition: opacity 1s;
+  }
+  .fade-leave {
+
+  }
+  .fade-leave-active {
+    transition: opacity 1s;
+    opacity: 0;
+  }
+</style>
