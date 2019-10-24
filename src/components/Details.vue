@@ -19,9 +19,9 @@
 
 <script>
 export default {
+  props: ['id'],
   data () {
     return {
-      id: this.$route.params.id,
       apiKey: process.env.VUE_APP_OMDB_API_KEY,
       apiRoot: process.env.VUE_APP_API_ROOT,
       details: null
