@@ -57,7 +57,7 @@ export default {
       axios.get(`?apiKey=${this.apiKey}&s=${this.searchString}`)
         .then(res => {
           const {Response, Search, Error} = res.data
-          if (Response) {
+          if (Response === 'True') {
             this.data = Search
           } else {
             this.error = Error
