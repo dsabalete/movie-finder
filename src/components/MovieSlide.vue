@@ -1,18 +1,19 @@
 <template>
     <div class="text-center" @click="navigateToDetails">
       <img :src="film.Poster" :alt="film.Title">
-      <h4>{{ film.Title }} ({{ film.Year }})</h4>
+      <h4>{{ film.Title }} <small>({{ film.Year }})</small></h4>
       <p>Director: {{ director }}</p>
     </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   props: ['film'],
   data () {
     return {
       apiKey: process.env.VUE_APP_OMDB_API_KEY,
-      apiRoot: process.env.VUE_APP_API_ROOT,
       director: ''
     }
   },
@@ -27,12 +28,11 @@ export default {
     }
   },
   created () {
-    const url = `${this.apiRoot}?apikey=${this.apiKey}&i=${this.film.imdbID}`
-    fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        this.director = data.Director
+    axios.get(`?apiKey=${this.apiKey}&i=${this.film.imdbID}`)
+      .then(res => {
+        this.director = res.data.Director
       })
+      .catch(error => console.log(error))
   }
 }
 </script>

@@ -28,37 +28,42 @@
 </template>
 
 <script>
+import axios from 'axios'
 import MovieSlide from './MovieSlide.vue'
 import { Carousel, Slide } from 'vue-carousel'
 
 export default {
   data () {
     return {
-      searchString: '',
       apiKey: process.env.VUE_APP_OMDB_API_KEY,
-      apiRoot: process.env.VUE_APP_API_ROOT,
-      resource: {},
       data: null,
       error: '',
+      searchString: '',
       alertAnimation: 'fade'
     }
   },
+  // computed: {
+  //   searchString () {
+  //     return this.$store.state.searchString
+  //   }
+  // },
   methods: {
     onFocus () {
-      this.searchString = ''
+      this.$store.state.searchString = ''
       this.error = ''
     },
     doSearch () {
       this.data = null
-      fetch(`${this.apiRoot}?apikey=${this.apiKey}&s=${this.searchString}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.Error) {
-            this.error = data.Error
+      axios.get(`?apiKey=${this.apiKey}&s=${this.searchString}`)
+        .then(res => {
+          const {Response, Search, Error} = res.data
+          if (Response) {
+            this.data = Search
           } else {
-            this.data = data.Search
+            this.error = Error
           }
         })
+        .catch(error => console.log(error))
     }
   },
   components: {
@@ -75,9 +80,6 @@ export default {
   }
   .fade-enter-active {
     transition: opacity 1s;
-  }
-  .fade-leave {
-
   }
   .fade-leave-active {
     transition: opacity 1s;

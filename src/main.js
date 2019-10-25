@@ -2,17 +2,20 @@
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
 import App from './App'
+import axios from 'axios'
 import router from './router'
-// import VueResource from 'vue-resource'
+
+import { store } from './store/store'
 
 Vue.config.productionTip = false
 
-// Vue.use(VueResource)
+axios.defaults.baseURL = 'https://www.omdbapi.com'
 
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
