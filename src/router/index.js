@@ -1,20 +1,19 @@
 import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router'
 import Home from '@/components/Home'
 import Details from '@/components/Details'
 
-Vue.use(Router)
+Vue.use(VueRouter)
 
-export default new Router({
+export default new VueRouter({
+  mode: 'history',
   routes: [
     {
       path: '/',
-      name: 'Home',
       component: Home
     },
     {
       path: '/details/:id',
-      name: 'Details',
       component: Details,
       props: true
     }

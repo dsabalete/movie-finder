@@ -1,69 +1,42 @@
 <template>
   <div>
-    <form>
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search movies by title"
-          id="search"
-          v-model="searchString"
-          @focus="onFocus">
-        <span class="input-group-btn">
-          <button class="btn btn-primary" @click="doSearch">Search</button>
-        </span>
+    <div class="row">
+      <div class="col-xs-8 col-xs-offset-2 col-sm-10 col-sm-offset-1">
+        <transition name="fade" mode="out-in">
+          <carousel v-if="error == ''" :navigationEnabled="true" :perPage="1">
+            <slide v-for="(movie, index) in movies" :key="index" class="carousel-item">
+              <app-movie-slide :movie="movie"/>
+            </slide>
+          </carousel>
+        </transition>
       </div>
-    </form>
-    <br>
-    <transition :name="alertAnimation" mode="out-in">
-      <carousel v-if="data"
-        :navigationEnabled="true"
-        :perPage="1">
-        <slide v-for="(film, index) in data" :key="index" class="carousel-item">
-          <app-movie-slide :film="film"/>
-        </slide>
-      </carousel>
-    </transition>
-    <transition :name="alertAnimation" mode="out-in">
-      <div class="alert alert-info" v-if="error" key="info">{{ error }}</div>
-    </transition>
+    </div>
+    <div class="row">
+      <transition name="fade" mode="out-in">
+        <div class="alert alert-info" v-if="error" key="info">{{ error }}</div>
+      </transition>
+    </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
 import MovieSlide from './MovieSlide.vue'
 import { Carousel, Slide } from 'vue-carousel'
+import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-  data () {
-    return {
-      apiKey: process.env.VUE_APP_OMDB_API_KEY,
-      data: null,
-      error: '',
-      searchString: '',
-      alertAnimation: 'fade'
-    }
+  computed: {
+    ...mapGetters([
+      'movies',
+      'error'
+    ])
   },
-  // computed: {
-  //   searchString () {
-  //     return this.$store.state.searchString
-  //   }
-  // },
   methods: {
+    ...mapMutations([
+      'reset'
+    ]),
     onFocus () {
-      this.$store.state.searchString = ''
-      this.error = ''
-    },
-    doSearch () {
-      this.data = null
-      axios.get(`?apiKey=${this.apiKey}&s=${this.searchString}`)
-        .then(res => {
-          const {Response, Search, Error} = res.data
-          if (Response === 'True') {
-            this.data = Search
-          } else {
-            this.error = Error
-          }
-        })
-        .catch(error => console.log(error))
+      this.reset()
     }
   },
   components: {
@@ -75,14 +48,5 @@ export default {
 </script>
 
 <style scoped>
-  .fade-enter {
-    opacity: 0;
-  }
-  .fade-enter-active {
-    transition: opacity 1s;
-  }
-  .fade-leave-active {
-    transition: opacity 1s;
-    opacity: 0;
-  }
+
 </style>

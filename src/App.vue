@@ -1,21 +1,30 @@
 <template>
-    <div class="container">
-        <div class="row">
-            <div class="col-xs-10 col-xs-offset-1 col-sm-10 col-sm-offset-1">
-                <h3>MovieFinder</h3>
-                <router-view></router-view>
-            </div>
-        </div>
-    </div>
+  <div class="container">
+    <app-header></app-header>
+    <transition name="fade" mode="out-in">
+      <router-view></router-view>
+    </transition>
+  </div>
 </template>
 
 <script>
+import Header from './components/Header'
 export default {
+  components: {
+    appHeader: Header
+  }
 }
 </script>
 
 <style>
-body {
-    background-color: #ddd;
-}
+  .fade-enter {
+    opacity: 0;
+  }
+  .fade-enter-active {
+    transition: opacity 1s;
+  }
+  .fade-leave-active {
+    transition: opacity 1s;
+    opacity: 0;
+  }
 </style>
